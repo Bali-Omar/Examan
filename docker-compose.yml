@@ -1,0 +1,33 @@
+version: "3.8"          
+
+services:
+ 
+  redis:
+    image: redis:latest
+    container_name: airbnb-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data:/data          
+
+  
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redis-insight
+    ports:
+      - "5540:5540"          
+    depends_on:
+      - redis
+
+  
+  jupyter:
+    image: jupyter/base-notebook
+    container_name: redis-notebookk
+    ports:
+      - "8888:8888"
+   
+    volumes:
+      - ./:/home/jovyan/work
+    command: start-notebook.sh --NotebookApp.token='' --NotebookApp.password=''
+    depends_on:
+      - redis
